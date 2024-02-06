@@ -1,3 +1,3 @@
 # NLW Expert
 
-Uma aplicação de notas com react
+Uma aplicação de notas feita em react
