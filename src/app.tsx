@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 import Logo from "./assets/Logo.svg";
 import { NewNoteCard } from "./components/new-note-card";
 import { NoteCard } from "./components/note-card";
+import { toast } from "sonner";
 
 export function App() {
   const [search, setSearch] = useState('')
@@ -43,6 +44,15 @@ export function App() {
     localStorage.setItem('notes', JSON.stringify(notesArray))
   } 
 
+  function deleteNote(id: string) {
+    const updatedNotes = notes.filter((note: Note) => note.id !== id)
+
+    setNotes(updatedNotes)
+    localStorage.setItem('notes', JSON.stringify(updatedNotes))
+
+    toast.error('Nota deletada com sucesso!')
+  }
+
   return (
     <div className="mx-auto max-w-6xl my-12 space-y-6">
       <img src={Logo} alt="NLW Expert" />
@@ -69,7 +79,7 @@ export function App() {
       <div className="grid grid-cols-3 gap-6 auto-rows-[250px]">
         <NewNoteCard onNoteCreated={onNoteCreated} />
           {filteredNotes.map((note: any) => {
-            return <NoteCard key={note.id} note={note} />
+            return <NoteCard key={note.id} note={note} deleteNote={deleteNote} />
           })}
       </div>
     </div>
