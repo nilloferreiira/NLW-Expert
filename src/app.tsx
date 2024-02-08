@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Logo from "./assets/Logo.svg";
 import { NewNoteCard } from "./components/new-note-card";
 import { NoteCard } from "./components/note-card";
 
 export function App() {
+  const [search, setSearch] = useState('')
+  const [notes, setNotes] = useState<Note[]>( () => {
+    const notesOnStorage = localStorage.getItem('notes')
+    if (notesOnStorage) {
+      return JSON.parse(notesOnStorage)
+    }
+
+    return []
+  })
 
   interface Note {
     id: string,
@@ -11,7 +20,15 @@ export function App() {
     content: string
   }
 
-  const [notes, setNotes] = useState<Note[]>([])
+  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
+    const query = event.target.value
+    
+    setSearch(query)
+  }
+
+  const filteredNotes = search !== ''
+  ? notes.filter((note: Note) => note.content.toLowerCase().includes(search.toLocaleLowerCase()))
+  : notes
 
   function onNoteCreated(content: string) {
     const newNote = {
@@ -20,7 +37,10 @@ export function App() {
       content: content
     }
 
-    setNotes([newNote, ...notes])
+    const notesArray = [newNote, ...notes]
+
+    setNotes(notesArray)
+    localStorage.setItem('notes', JSON.stringify(notesArray))
   } 
 
   return (
@@ -30,6 +50,7 @@ export function App() {
       <form className="w-full ">
         <input
           type="text"
+          onChange={handleSearch}
           placeholder="Busque em suas notas..."
           className={`
                     w-full 
@@ -47,7 +68,7 @@ export function App() {
 
       <div className="grid grid-cols-3 gap-6 auto-rows-[250px]">
         <NewNoteCard onNoteCreated={onNoteCreated} />
-          {notes.map((note: any) => {
+          {filteredNotes.map((note: any) => {
             return <NoteCard key={note.id} note={note} />
           })}
       </div>
