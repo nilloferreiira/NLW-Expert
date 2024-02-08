@@ -1,56 +1,59 @@
-import { ChangeEvent, useState } from "react";
-import Logo from "./assets/Logo.svg";
-import { NewNoteCard } from "./components/new-note-card";
-import { NoteCard } from "./components/note-card";
 import { toast } from "sonner";
+import Logo from "./assets/Logo.svg";
+import { ChangeEvent, useState } from "react";
+import { NoteCard } from "./components/note-card";
+import { NewNoteCard } from "./components/new-note-card";
 
 export function App() {
-  const [search, setSearch] = useState('')
-  const [notes, setNotes] = useState<Note[]>( () => {
-    const notesOnStorage = localStorage.getItem('notes')
+  const [search, setSearch] = useState("");
+  const [notes, setNotes] = useState<Note[]>(() => {
+    const notesOnStorage = localStorage.getItem("notes");
     if (notesOnStorage) {
-      return JSON.parse(notesOnStorage)
+      return JSON.parse(notesOnStorage);
     }
 
-    return []
-  })
+    return [];
+  });
 
   interface Note {
-    id: string,
-    date: Date,
-    content: string
+    id: string;
+    date: Date;
+    content: string;
   }
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>) {
-    const query = event.target.value
-    
-    setSearch(query)
+    const query = event.target.value;
+
+    setSearch(query);
   }
 
-  const filteredNotes = search !== ''
-  ? notes.filter((note: Note) => note.content.toLowerCase().includes(search.toLocaleLowerCase()))
-  : notes
+  const filteredNotes =
+    search !== ""
+      ? notes.filter((note: Note) =>
+          note.content.toLowerCase().includes(search.toLocaleLowerCase())
+        )
+      : notes;
 
   function onNoteCreated(content: string) {
     const newNote = {
       id: crypto.randomUUID(),
       date: new Date(),
-      content: content
-    }
+      content: content,
+    };
 
-    const notesArray = [newNote, ...notes]
+    const notesArray = [newNote, ...notes];
 
-    setNotes(notesArray)
-    localStorage.setItem('notes', JSON.stringify(notesArray))
-  } 
+    setNotes(notesArray);
+    localStorage.setItem("notes", JSON.stringify(notesArray));
+  }
 
   function deleteNote(id: string) {
-    const updatedNotes = notes.filter((note: Note) => note.id !== id)
+    const updatedNotes = notes.filter((note: Note) => note.id !== id);
 
-    setNotes(updatedNotes)
-    localStorage.setItem('notes', JSON.stringify(updatedNotes))
+    setNotes(updatedNotes);
+    localStorage.setItem("notes", JSON.stringify(updatedNotes));
 
-    toast.error('Nota deletada com sucesso!')
+    toast.warning("Nota deletada com sucesso!");
   }
 
   return (
@@ -78,9 +81,9 @@ export function App() {
 
       <div className="grid grid-cols-3 gap-6 auto-rows-[250px]">
         <NewNoteCard onNoteCreated={onNoteCreated} />
-          {filteredNotes.map((note: any) => {
-            return <NoteCard key={note.id} note={note} deleteNote={deleteNote} />
-          })}
+        {filteredNotes.map((note: any) => {
+          return <NoteCard key={note.id} note={note} deleteNote={deleteNote} />;
+        })}
       </div>
     </div>
   );
