@@ -8,8 +8,9 @@ __Principais Features:__
 - Salva as notas no localStorage do browser
 
   __Tecnologias:__
-  React + Vite
-  Radix
-  TailwindCSS
-  Sonner
+  - React + Vite
+  - Radix
+  - TailwindCSS
+  - Sonner
+  - SpeechRecognitionAPI
   
