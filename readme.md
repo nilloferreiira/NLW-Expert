@@ -13,4 +13,5 @@ __Principais Features:__
   - TailwindCSS
   - Sonner
   - SpeechRecognitionAPI
-  
+
+  ![foto mais recente](/public/readmeimg.png)
